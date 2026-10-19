@@ -1,0 +1,10 @@
+{
+  "name": "arabic-scrabble-pwa",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Installable offline-capable Arabic Scrabble game by Axegav",
+  "scripts": {
+    "check": "node scripts/check.mjs",
+    "build": "npm run check && node scripts/build.mjs"
+  }
+}

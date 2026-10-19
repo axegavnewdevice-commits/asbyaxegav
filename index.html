@@ -3,7 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>arabic scrabbLe by: axegav</title>
+    <title>Arabic Scrabble by Axegav</title>
+    <meta name="description" content="لعبة سكرابل باللغة العربية للاعبين، قابلة للتثبيت والعمل دون اتصال بالإنترنت.">
+    <meta name="theme-color" content="#4a2f26">
+    <meta name="application-name" content="Arabic Scrabble">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="سكرابل عربي">
+    <link rel="manifest" href="./manifest.webmanifest">
+    <link rel="icon" href="./icons/icon.svg" type="image/svg+xml">
+    <link rel="apple-touch-icon" href="./icons/icon-192.png">
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&display=swap');
@@ -255,53 +265,25 @@
                 gap: 0.25rem;
             }
         }
+    
+        /* PWA toolbar */
+        .pwa-toolbar { width: min(100%, 1200px); margin: 0 auto 0.75rem; display: flex; align-items: center; justify-content: space-between; gap: 0.75rem; flex-wrap: wrap; direction: rtl; }
+        .pwa-install-button { border: 1px solid rgba(255,255,255,0.2); border-radius: 0.65rem; padding: 0.6rem 1rem; background: #fbbf24; color: #422006; font: inherit; font-weight: 700; cursor: pointer; box-shadow: 0 2px 8px rgba(0,0,0,0.25); }
+        .pwa-install-button:hover { background: #fcd34d; }
+        .pwa-install-button:focus-visible { outline: 3px solid #93c5fd; outline-offset: 3px; }
+        .pwa-network-status { display: inline-flex; align-items: center; gap: 0.35rem; min-height: 2.25rem; padding: 0.35rem 0.75rem; border-radius: 999px; background: rgba(74, 222, 128, 0.15); color: #bbf7d0; font-size: 0.9rem; }
+        .pwa-network-status.is-offline { background: rgba(251, 191, 36, 0.16); color: #fde68a; }
+        .pwa-network-status[hidden], .pwa-install-button[hidden] { display: none !important; }
+        @media (max-width: 420px) { .pwa-toolbar { align-items: stretch; } .pwa-install-button { flex: 1; } .pwa-network-status { justify-content: center; } }
+
     </style>
-     <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-        import { getAuth, signInAnonymously, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        import { getFirestore } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
-        import { setLogLevel } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
-
-        // Global variables provided by the environment
-        const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
-        const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : {};
-        const initialAuthToken = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
-
-        let app, db, auth;
-
-        // Initialize Firebase and Authentication
-        window.initFirebase = async () => {
-            if (Object.keys(firebaseConfig).length > 0) {
-                app = initializeApp(firebaseConfig);
-                db = getFirestore(app);
-                auth = getAuth(app);
-                setLogLevel('debug'); // Enable Firestore logging
-
-                try {
-                    if (initialAuthToken) {
-                        await signInWithCustomToken(auth, initialAuthToken);
-                        console.log("Firebase signed in with custom token.");
-                    } else {
-                        await signInAnonymously(auth);
-                        console.log("Firebase signed in anonymously.");
-                    }
-                } catch (error) {
-                    console.error("Firebase Auth error:", error);
-                }
-
-                // Get userId
-                const userId = auth.currentUser?.uid || crypto.randomUUID();
-                console.log("Current user ID:", userId);
-            } else {
-                console.warn("Firebase config not available. Running game in memory only.");
-            }
-        };
-
-        // Call initialization on load
-        window.addEventListener('load', window.initFirebase);
-    </script>
 </head>
 <body>
+
+    <div class="pwa-toolbar" role="region" aria-label="حالة التطبيق والتثبيت">
+        <button id="install-app" class="pwa-install-button" type="button">تثبيت التطبيق</button>
+        <span id="pwa-network-status" class="pwa-network-status" role="status" aria-live="polite">جارٍ التحقق من الاتصال…</span>
+    </div>
 
     <div class="game-container">
         <h1 class="text-4xl font-bold mb-4 text-center text-yellow-300">arabic scrabbLe - by: axegav</h1>
@@ -359,7 +341,7 @@
             </div>
             
         </div>
-    </div
+    </div>
     
     <!-- Confirmation Modal Structure (NEW) -->
     <div id="confirm-modal" class="modal-overlay hidden opacity-0">
@@ -2106,6 +2088,8 @@
             }, 300);
         };
     </script>
+
+    <script src="./pwa.js" defer></script>
 
 </body>
 </html>
